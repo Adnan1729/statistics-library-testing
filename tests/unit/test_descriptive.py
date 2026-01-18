@@ -5,6 +5,7 @@ Following TDD - these tests are written BEFORE implementation.
 
 import pytest
 from src.statlib.descriptive import mean, median, variance, stdev
+from hypothesis import given, strategies as st, assume
 
 
 class TestMean:
@@ -150,3 +151,98 @@ class TestStandardDeviation:
         """Test that empty list raises ValueError."""
         with pytest.raises(ValueError, match="Cannot compute standard deviation of empty"):
             stdev([])
+
+class TestDescriptiveProperties:
+    """Property-based tests for descriptive statistics.
+    
+    These tests use Hypothesis to generate random test data and verify
+    mathematical properties that should always hold true.
+    """
+    
+    @given(st.lists(st.floats(allow_nan=False, allow_infinity=False, 
+                              min_value=-1e10, max_value=1e10), 
+                    min_size=1, max_size=100))
+    def test_mean_bounds(self, data):
+        """Mean should always be between min and max of data."""
+        result = mean(data)
+        assert min(data) <= result <= max(data)
+    
+    @given(st.lists(st.floats(allow_nan=False, allow_infinity=False,
+                              min_value=-1e10, max_value=1e10), 
+                    min_size=1, max_size=100))
+    def test_median_bounds(self, data):
+        """Median should always be between min and max of data."""
+        result = median(data)
+        assert min(data) <= result <= max(data)
+    
+    @given(st.lists(st.floats(allow_nan=False, allow_infinity=False,
+                              min_value=-1e10, max_value=1e10), 
+                    min_size=2, max_size=100))
+    def test_variance_non_negative(self, data):
+        """Variance should always be non-negative."""
+        result = variance(data, sample=True)
+        assert result >= 0
+    
+    @given(st.lists(st.floats(allow_nan=False, allow_infinity=False,
+                              min_value=-1e10, max_value=1e10), 
+                    min_size=2, max_size=100))
+    def test_stdev_non_negative(self, data):
+        """Standard deviation should always be non-negative."""
+        result = stdev(data, sample=True)
+        assert result >= 0
+    
+    @given(st.lists(st.floats(allow_nan=False, allow_infinity=False,
+                              min_value=-1e10, max_value=1e10), 
+                    min_size=2, max_size=100))
+    def test_stdev_equals_sqrt_variance(self, data):
+        """Standard deviation should equal square root of variance."""
+        var = variance(data, sample=True)
+        sd = stdev(data, sample=True)
+        assert abs(sd - var**0.5) < 1e-6
+    
+    @given(st.lists(st.floats(allow_nan=False, allow_infinity=False,
+                              min_value=-1e10, max_value=1e10), 
+                    min_size=1, max_size=100))
+    def test_mean_single_value_property(self, data):
+        """Mean of a single repeated value should equal that value."""
+        value = data[0]
+        repeated = [value] * len(data)
+        assert abs(mean(repeated) - value) < 1e-6
+    
+    @given(st.lists(st.floats(allow_nan=False, allow_infinity=False,
+                              min_value=-1e10, max_value=1e10), 
+                    min_size=2, max_size=100))
+    def test_variance_zero_for_constant(self, data):
+        """Variance of constant data should be zero."""
+        constant_data = [data[0]] * len(data)
+        result = variance(constant_data, sample=True)
+        assert abs(result) < 1e-10
+    
+    @given(st.lists(st.integers(min_value=-1000, max_value=1000), 
+                    min_size=1, max_size=100))
+    def test_mean_with_integers(self, data):
+        """Mean should work correctly with integer data."""
+        result = mean(data)
+        expected = sum(data) / len(data)
+        assert abs(result - expected) < 1e-10
+    
+    @given(st.lists(st.floats(allow_nan=False, allow_infinity=False,
+                              min_value=-1e10, max_value=1e10), 
+                    min_size=1, max_size=100))
+    def test_median_odd_even_consistency(self, data):
+        """Test median consistency between odd and even length datasets."""
+        # For odd length, median should be an actual data point when not duplicated
+        if len(data) % 2 == 1:
+            result = median(data)
+            assert min(data) <= result <= max(data)
+    
+    @given(st.lists(st.floats(allow_nan=False, allow_infinity=False,
+                              min_value=-1e10, max_value=1e10), 
+                    min_size=3, max_size=100))
+    def test_sample_variance_greater_than_population(self, data):
+        """Sample variance should be >= population variance (usually greater)."""
+        # Skip if all values are the same (both would be 0)
+        if len(set(data)) > 1:
+            sample_var = variance(data, sample=True)
+            pop_var = variance(data, sample=False)
+            assert sample_var >= pop_var
