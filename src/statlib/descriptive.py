@@ -192,3 +192,40 @@ def stdev(data: List[Union[int, float]], sample: bool = True) -> float:
         raise ValueError("Cannot compute standard deviation of empty dataset")
     
     return variance(data, sample=sample) ** 0.5
+
+def data_range(data: List[Union[int, float]]) -> float:
+    """
+    Calculate the range (max - min) of a dataset.
+    
+    Parameters
+    ----------
+    data : List[Union[int, float]]
+        A list of numeric values
+    
+    Returns
+    -------
+    float
+        The range of the dataset (maximum - minimum)
+    
+    Raises
+    ------
+    ValueError
+        If the input list is empty
+    
+    Examples
+    --------
+    >>> data_range([1, 2, 3, 4, 5])
+    4.0
+    
+    >>> data_range([10])
+    0.0
+    
+    Notes
+    -----
+    Time Complexity: O(n)
+    Space Complexity: O(1)
+    """
+    if not data:
+        raise ValueError("Cannot compute range of empty dataset")
+    
+    return float(max(data) - min(data))
