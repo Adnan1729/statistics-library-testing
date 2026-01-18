@@ -98,3 +98,97 @@ def median(data: List[Union[int, float]]) -> float:
         mid1 = sorted_data[n // 2 - 1]
         mid2 = sorted_data[n // 2]
         return (mid1 + mid2) / 2.0
+    
+def variance(data: List[Union[int, float]], sample: bool = True) -> float:
+    """
+    Calculate the variance of a dataset.
+    
+    Variance measures the spread of data points around the mean.
+    
+    Parameters
+    ----------
+    data : List[Union[int, float]]
+        A list of numeric values
+    sample : bool, default=True
+        If True, calculate sample variance (divide by n-1)
+        If False, calculate population variance (divide by n)
+    
+    Returns
+    -------
+    float
+        The variance of the dataset
+    
+    Raises
+    ------
+    ValueError
+        If the input list is empty or if sample variance requested with < 2 values
+    
+    Examples
+    --------
+    >>> variance([1, 2, 3, 4, 5], sample=True)
+    2.5
+    
+    >>> variance([1, 2, 3, 4, 5], sample=False)
+    2.0
+    
+    Notes
+    -----
+    Sample variance: s² = Σ(x - x̄)² / (n-1)
+    Population variance: σ² = Σ(x - μ)² / n
+    Time Complexity: O(n)
+    Space Complexity: O(1)
+    """
+    if not data:
+        raise ValueError("Cannot compute variance of empty dataset")
+    
+    if sample and len(data) < 2:
+        raise ValueError("Sample variance requires at least 2 data points")
+    
+    data_mean = mean(data)
+    squared_diffs = [(x - data_mean) ** 2 for x in data]
+    sum_squared_diffs = sum(squared_diffs)
+    
+    if sample:
+        return sum_squared_diffs / (len(data) - 1)
+    else:
+        return sum_squared_diffs / len(data)
+
+
+def stdev(data: List[Union[int, float]], sample: bool = True) -> float:
+    """
+    Calculate the standard deviation of a dataset.
+    
+    Standard deviation is the square root of variance.
+    
+    Parameters
+    ----------
+    data : List[Union[int, float]]
+        A list of numeric values
+    sample : bool, default=True
+        If True, calculate sample standard deviation
+        If False, calculate population standard deviation
+    
+    Returns
+    -------
+    float
+        The standard deviation of the dataset
+    
+    Raises
+    ------
+    ValueError
+        If the input list is empty or if sample stdev requested with < 2 values
+    
+    Examples
+    --------
+    >>> stdev([1, 2, 3, 4, 5], sample=True)
+    1.5811388300841898
+    
+    Notes
+    -----
+    Time Complexity: O(n)
+    Space Complexity: O(1)
+    """
+    if not data:
+        raise ValueError("Cannot compute standard deviation of empty dataset")
+    
+    return variance(data, sample=sample) ** 0.5
