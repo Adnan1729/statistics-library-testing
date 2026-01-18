@@ -4,7 +4,7 @@ Following TDD - these tests are written BEFORE implementation.
 """
 
 import pytest
-from src.statlib.descriptive import mean, median, variance, stdev
+from src.statlib.descriptive import mean, median, variance, stdev, data_range
 from hypothesis import given, strategies as st, assume
 
 
@@ -246,3 +246,32 @@ class TestDescriptiveProperties:
             sample_var = variance(data, sample=True)
             pop_var = variance(data, sample=False)
             assert sample_var >= pop_var
+
+class TestRangeFunction:
+    """Test cases for range calculation."""
+    
+    def test_range_simple(self):
+        """Test range of simple list."""
+        assert data_range([1, 2, 3, 4, 5]) == 4.0
+    
+    def test_range_negative(self):
+        """Test range with negative numbers."""
+        assert data_range([-5, -2, 0, 3, 10]) == 15.0
+    
+    def test_range_single_value(self):
+        """Test range of single value is zero."""
+        assert data_range([42]) == 0.0
+    
+    def test_range_all_same(self):
+        """Test range when all values are same."""
+        assert data_range([7, 7, 7, 7]) == 0.0
+    
+    def test_range_empty_raises_error(self):
+        """Test that empty list raises ValueError."""
+        with pytest.raises(ValueError, match="Cannot compute range of empty"):
+            data_range([])
+    
+    def test_range_floats(self):
+        """Test range with floating point numbers."""
+        result = data_range([1.5, 2.7, 3.9])
+        assert abs(result - 2.4) < 1e-10
