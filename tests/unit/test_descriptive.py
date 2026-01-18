@@ -4,7 +4,7 @@ Following TDD - these tests are written BEFORE implementation.
 """
 
 import pytest
-from src.statlib.descriptive import mean, median
+from src.statlib.descriptive import mean, median, variance, stdev
 
 
 class TestMean:
@@ -80,3 +80,73 @@ class TestMedian:
     def test_median_two_elements(self):
         """Test median with exactly two elements."""
         assert median([1, 3]) == 2.0
+
+class TestVariance:
+    """Test cases for variance calculation."""
+    
+    def test_variance_sample(self):
+        """Test sample variance calculation."""
+        # Sample variance of [1, 2, 3, 4, 5] = 2.5
+        result = variance([1, 2, 3, 4, 5], sample=True)
+        assert abs(result - 2.5) < 1e-10
+    
+    def test_variance_population(self):
+        """Test population variance calculation."""
+        # Population variance of [1, 2, 3, 4, 5] = 2.0
+        result = variance([1, 2, 3, 4, 5], sample=False)
+        assert abs(result - 2.0) < 1e-10
+    
+    def test_variance_single_value_sample(self):
+        """Test that single value raises error for sample variance."""
+        with pytest.raises(ValueError, match="Sample variance requires at least 2"):
+            variance([42], sample=True)
+    
+    def test_variance_single_value_population(self):
+        """Test population variance of single value is zero."""
+        assert variance([42], sample=False) == 0.0
+    
+    def test_variance_no_variation(self):
+        """Test variance when all values are the same."""
+        assert variance([5, 5, 5, 5], sample=True) == 0.0
+        assert variance([5, 5, 5, 5], sample=False) == 0.0
+    
+    def test_variance_negative_numbers(self):
+        """Test variance with negative numbers."""
+        result = variance([-2, -1, 0, 1, 2], sample=True)
+        assert abs(result - 2.5) < 1e-10
+    
+    def test_variance_empty_raises_error(self):
+        """Test that empty list raises ValueError."""
+        with pytest.raises(ValueError, match="Cannot compute variance of empty"):
+            variance([])
+
+class TestStandardDeviation:
+    """Test cases for standard deviation calculation."""
+    
+    def test_stdev_sample(self):
+        """Test sample standard deviation."""
+        # Sample stdev of [1, 2, 3, 4, 5] = sqrt(2.5) ≈ 1.5811
+        result = stdev([1, 2, 3, 4, 5], sample=True)
+        assert abs(result - 1.5811388300841898) < 1e-10
+    
+    def test_stdev_population(self):
+        """Test population standard deviation."""
+        # Population stdev of [1, 2, 3, 4, 5] = sqrt(2.0) ≈ 1.4142
+        result = stdev([1, 2, 3, 4, 5], sample=False)
+        assert abs(result - 1.4142135623730951) < 1e-10
+    
+    def test_stdev_no_variation(self):
+        """Test stdev when all values are the same."""
+        assert stdev([7, 7, 7], sample=True) == 0.0
+    
+    def test_stdev_matches_sqrt_variance(self):
+        """Test that stdev equals sqrt of variance."""
+        data = [2, 4, 4, 4, 5, 5, 7, 9]
+        var = variance(data, sample=True)
+        sd = stdev(data, sample=True)
+        assert abs(sd - var**0.5) < 1e-10
+    
+    def test_stdev_empty_raises_error(self):
+        """Test that empty list raises ValueError."""
+        with pytest.raises(ValueError, match="Cannot compute standard deviation of empty"):
+            stdev([])
