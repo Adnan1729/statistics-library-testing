@@ -161,23 +161,23 @@
 ### 4.1 Chosen Approaches
 
 **Unit Testing with pytest**
-- ✓ Appropriate: Fast feedback, isolates failures
-- ✓ Good for: Pure functions with clear inputs/outputs
+- Appropriate: Fast feedback, isolates failures
+- Good for: Pure functions with clear inputs/outputs
 - Industry standard for Python
 
 **Property-Based Testing with Hypothesis**
-- ✓ Appropriate: Catches edge cases developers don't think of
-- ✓ Good for: Mathematical properties (e.g., mean ≤ max)
+- Appropriate: Catches edge cases developers don't think of
+- Good for: Mathematical properties (e.g., mean ≤ max)
 - Complements example-based tests
 
 **Mutation Testing with mutmut**
-- ✓ Appropriate: Validates test quality
-- ✓ Good for: Finding weak tests
+- Appropriate: Validates test quality
+- Good for: Finding weak tests
 - Ensures tests actually detect bugs
 
 **Performance Testing with pytest-benchmark**
-- ✓ Appropriate: Verifies complexity requirements
-- ✓ Good for: Regression detection
+- Appropriate: Verifies complexity requirements
+- Good for: Regression detection
 - Validates QA-PERF requirements
 
 ### 4.2 Rationale
