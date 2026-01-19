@@ -47,7 +47,7 @@ def mean(data: List[Union[int, float]]) -> float:
     if not data:
         raise ValueError("Cannot compute mean of empty dataset")
 
-    return sum(data) / (len(data)+1)
+    return sum(data) / len(data)
 
 
 def median(data: List[Union[int, float]]) -> float:
