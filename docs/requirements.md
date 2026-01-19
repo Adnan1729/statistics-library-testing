@@ -51,6 +51,26 @@
 - Hypothesis testing (t-test)
 - Confidence intervals
 
+### 1.3 Distribution Module (FR-DIST)
+
+**FR-DIST-001: Normal Distribution PDF**
+- The system shall calculate the probability density function (PDF) of the normal distribution
+- Input: x value, mean (μ), standard deviation (σ)
+- Output: Probability density at x
+- Formula: f(x) = (1 / (σ√(2π))) * exp(-0.5 * ((x - μ) / σ)²)
+
+**FR-DIST-002: Normal Distribution CDF**
+- The system shall calculate the cumulative distribution function (CDF) of the normal distribution
+- Input: x value, mean (μ), standard deviation (σ)
+- Output: Cumulative probability up to x
+- Uses: Error function approximation
+
+**FR-DIST-003: Generate Random Normal Samples**
+- The system shall generate random samples from a normal distribution
+- Input: sample size (n), mean (μ), standard deviation (σ), optional random seed
+- Output: List of random values following normal distribution
+- Properties: Generated samples should have mean ≈ μ and stdev ≈ σ
+
 ---
 
 ## 2. Quality Attribute Requirements
