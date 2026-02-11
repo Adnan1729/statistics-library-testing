@@ -16,7 +16,7 @@ This project demonstrates comprehensive software testing practices including:
 ### Development Setup
 ```bash
 # Clone the repository
-git clone <your-repo-url>
+git clone [<your-repo-url>](https://github.com/Adnan1729/statistics-library-testing)
 cd statistics-library-testing
 
 # Create virtual environment
