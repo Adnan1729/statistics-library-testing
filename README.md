@@ -52,7 +52,7 @@ statistics-library-testing/
 
 ## Development Workflow
 
-Write requirements -> Write tests (RED phase) -> Implement code (GREEN phase) -> Refactor (REFACTOR phase) -> Measure coverage -> Review and iterate -> (Write requirements...)
+Write requirements -> Write tests (RED phase) -> Implement code (GREEN phase) -> Refactor (REFACTOR phase) -> Measure coverage -> Review and iterate -> (Write requirements...iterate back)
 
 ## Learning Outcomes Addressed
 
